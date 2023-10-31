@@ -20,6 +20,7 @@ function Cadastro() {
   return (
     <div>
     <div className="cadastro-container">
+      <h1>Teste</h1>
       <div className="cadastro-section">
         <h2>Cadastro de Professor</h2>
         <form>
