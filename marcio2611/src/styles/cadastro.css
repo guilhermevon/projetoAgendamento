@@ -1,0 +1,20 @@
+/*
+.cadastro-container {
+  display: flex;
+  justify-content: space-between;
+}
+*/
+.cadastro-section {
+  flex: 1;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #f4f4f4;
+}
+
+.cadastro-section-right {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #f4f4f4;
+}

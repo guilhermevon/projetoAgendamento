@@ -1,0 +1,188 @@
+import React, { useState, useEffect } from 'react';
+import '../styles/cadastro.css';
+
+function Cadastro() {
+  const [nomeProfessor, setNomeProfessor] = useState('');
+  const [nomeDisciplina, setNomeDisciplina] = useState('');
+  const [nomeTurma, setNomeTurma] = useState('');
+  const [selectedProfessor, setSelectedProfessor] = useState('');
+  const [selectedDisciplina, setSelectedDisciplina] = useState('');
+  const [selectedTurma, setSelectedTurma] = useState('');
+  const [selectedTurno, setSelectedTurno] = useState('');
+  const [cargaHoraria, setCargaHoraria] = useState('');
+  const [dataInicio, setDataInicio] = useState('');
+
+  const [opcoesProfessores, setOpcoesProfessores] = useState([]);
+  const [opcoesDisciplinas, setOpcoesDisciplinas] = useState([]);
+  const [opcoesTurmas, setOpcoesTurmas] = useState([]);
+
+  const cadastrarProfessor = async () => {
+    // Lógica para cadastrar o professor no backend
+    // Após o cadastro, atualizar as opções de professores
+    fetchProfessores();
+  };
+
+  const cadastrarDisciplina = async () => {
+    // Lógica para cadastrar a disciplina no backend
+    // Após o cadastro, atualizar as opções de disciplinas
+    fetchDisciplinas();
+  };
+
+  const cadastrarTurma = async () => {
+    // Lógica para cadastrar a turma no backend
+    // Após o cadastro, atualizar as opções de turmas
+    fetchTurmas();
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    // Criar um objeto com os dados do formulário
+    const formData = {
+      nomeProfessor: selectedProfessor, // Certifique-se de que esteja correto
+    };
+  
+    try {
+      const response = await fetch('https://calendariooo.000webhostapp.com/professor.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      if (response.ok) {
+        console.log('Professor cadastrado com sucesso!');
+      } else {
+        console.error('Erro ao cadastrar professor. Por favor, tente novamente.');
+      }
+    } catch (error) {
+      console.error('Erro ao conectar com o servidor:', error);
+    }
+  };
+  
+
+  const fetchProfessores = async () => {
+    try {
+      const response = await fetch('https://calendariooo.000webhostapp.com/professor.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ nomeProfessor }),
+      });
+  
+      if (response.ok) {
+        console.log('Professor cadastrado com sucesso!');
+        // Atualizar opções após o cadastro
+        fetchProfessores();
+      } else {
+        console.error('Erro ao cadastrar professor. Por favor, tente novamente.');
+      }
+    } catch (error) {
+      console.error('Erro ao conectar com o servidor:', error);
+    }
+  };
+
+
+  const fetchDisciplinas = async () => {
+    // Lógica para obter a lista de disciplinas do backend
+    // Atualizar o estado opcoesDisciplinas com os dados recebidos
+  };
+
+  const fetchTurmas = async () => {
+    // Lógica para obter a lista de turmas do backend
+    // Atualizar o estado opcoesTurmas com os dados recebidos
+  };
+
+  useEffect(() => {
+    // Ao montar o componente, buscar as opções iniciais para os selects
+    fetchProfessores();
+    fetchDisciplinas();
+    fetchTurmas();
+  }, []);
+
+  return (
+    <div className="cadastro-container">
+      <div className="cadastro-section-left">
+        <div className="cadastro-section">
+          <h2>Cadastro de Professor</h2>
+          <form onSubmit={cadastrarProfessor}>
+            {/* Campos de cadastro para Professor */}
+            <label>Nome do Professor:</label>
+            <input type="text" value={nomeProfessor} onChange={(e) => setNomeProfessor(e.target.value)} />
+            <button type="submit">Cadastrar</button>
+          </form>
+        </div>
+
+        <div className="cadastro-section">
+          <h2>Cadastro de Disciplina</h2>
+          <form onSubmit={cadastrarDisciplina}>
+            {/* Campos de cadastro para Disciplina */}
+            <label>Nome da Disciplina:</label>
+            <input type="text" value={nomeDisciplina} onChange={(e) => setNomeDisciplina(e.target.value)} />
+            <button type="submit">Cadastrar</button>
+          </form>
+        </div>
+
+        <div className="cadastro-section">
+          <h2>Cadastro de Turma</h2>
+          <form onSubmit={cadastrarTurma}>
+            {/* Campos de cadastro para Turma */}
+            <label>Nome da Turma:</label>
+            <input type="text" value={nomeTurma} onChange={(e) => setNomeTurma(e.target.value)} />
+            <button type="submit">Cadastrar</button>
+          </form>
+        </div>
+      </div>
+
+      <div className="cadastro-section-right">
+        <h2>Cadastro de Horários</h2>
+        <form onSubmit={handleSubmit}>
+          {/* Campos de cadastro para Horários */}
+          <label>Professor:</label>
+          <select value={selectedProfessor} onChange={(e) => setSelectedProfessor(e.target.value)}>
+            {opcoesProfessores.map((professor) => (
+              <option key={professor.id} value={professor.id}>
+                {professor.nome}
+              </option>
+            ))}
+          </select>
+
+          <label>Disciplina:</label>
+          <select value={selectedDisciplina} onChange={(e) => setSelectedDisciplina(e.target.value)}>
+            {opcoesDisciplinas.map((disciplina) => (
+              <option key={disciplina.id} value={disciplina.id}>
+                {disciplina.nome}
+              </option>
+            ))}
+          </select>
+
+          <label>Turma:</label>
+          <select value={selectedTurma} onChange={(e) => setSelectedTurma(e.target.value)}>
+            {opcoesTurmas.map((turma) => (
+              <option key={turma.id} value={turma.id}>
+                {turma.nome}
+              </option>
+            ))}
+          </select>
+
+          <label>Turno:</label>
+          <select value={selectedTurno} onChange={(e) => setSelectedTurno(e.target.value)}>
+            {/* Opções de turno */}
+          </select>
+
+          <label>Carga Horária:</label>
+          <input type="text" value={cargaHoraria} onChange={(e) => setCargaHoraria(e.target.value)} />
+
+          <label>Data de Início:</label>
+          <input type="text" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)} />
+
+          <button type="submit">Cadastrar</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default Cadastro;
