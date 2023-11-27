@@ -136,8 +136,8 @@ function HorarioCadastro({ professors, disciplines, classrooms }) {
   };
 
   return (
-    <div class="cadastro-section">
-        <h2>Cadastro de Horário</h2>
+    <div className="cadastro-section">
+    <h2>Cadastro de Horário</h2>
 
       <form onSubmit={handleHorarioSubmit}>
         <div>
