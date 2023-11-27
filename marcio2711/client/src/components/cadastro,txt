@@ -1,0 +1,112 @@
+import { useState, useEffect } from 'react';
+import '../styles/cadastro.css';
+
+function Cadastro() {
+  const [nomeProfessor, setNomeProfessor] = useState('');
+  const [nomeDisciplina, setNomeDisciplina] = useState('');
+  const [nomeTurma, setNomeTurma] = useState('');
+  const [selectedProfessor, setSelectedProfessor] = useState('');
+  const [selectedDisciplina, setSelectedDisciplina] = useState('');
+  const [selectedTurma, setSelectedTurma] = useState('');
+  const [selectedTurno, setSelectedTurno] = useState('');
+  const [cargaHoraria, setCargaHoraria] = useState('');
+  const [dataInicio, setDataInicio] = useState('');
+  const [opcoesProfessores, setOpcoesProfessores] = useState([]);
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    const formData = {
+      nomeProfessor,
+      nomeDisciplina,
+      nomeTurma,
+      selectedProfessor,
+      selectedDisciplina,
+      selectedTurma,
+      selectedTurno,
+      cargaHoraria,
+      dataInicio,
+    };
+
+    try {
+      const response = await fetch('http://seu-servidor.com/sua-rota-de-cadastro.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        console.log('Cadastro realizado com sucesso!');
+      } else {
+        console.error('Erro ao cadastrar. Por favor, tente novamente.');
+      }
+    } catch (error) {
+      console.error('Erro ao conectar com o servidor:', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchProfessores = async () => {
+      try {
+        const response = await fetch('http://seu-servidor.com/listar-professores.php');
+        if (response.ok) {
+          const data = await response.json();
+          setOpcoesProfessores(data);
+        } else {
+          console.error('Erro ao obter a lista de professores.');
+        }
+      } catch (error) {
+        console.error('Erro ao conectar com o servidor:', error);
+      }
+    };
+
+    fetchProfessores();
+  }, []);
+
+  return (
+    <div className="cadastro-container">
+      {/* ... (restante do código permanece o mesmo) */}
+      <div className="cadastro-section-right">
+        <h2>Cadastro de Horários</h2>
+        <form onSubmit={handleFormSubmit}>
+          <label>Professor:</label>
+          <select value={selectedProfessor} onChange={(e) => setSelectedProfessor(e.target.value)}>
+            {opcoesProfessores.map((professor) => (
+              <option key={professor.id} value={professor.id}>
+                {professor.nome}
+              </option>
+            ))}
+          </select>
+          <label>Disciplina:</label>
+          <select value={selectedDisciplina} onChange={(e) => setSelectedDisciplina(e.target.value)}>
+            {/* Opções de disciplinas */}
+          </select>
+
+          <label>Turma:</label>
+          <select value={selectedTurma} onChange={(e) => setSelectedTurma(e.target.value)}>
+            {/* Opções de turno */}
+          </select>
+
+          <label>Turno:</label>
+          <select value={selectedTurno} onChange={(e) => setSelectedTurno(e.target.value)}>
+            {/* Opções de turno */}
+          </select>
+
+          <label>Carga Horária:</label>
+          <input type="text" value={cargaHoraria} onChange={(e) => setCargaHoraria(e.target.value)} />
+
+          <label>Data de Início:</label>
+          <input type="text" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)} />
+
+
+          {/* ... (restante do código permanece o mesmo) */}
+
+          <button type="submit">Cadastrar</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default Cadastro;

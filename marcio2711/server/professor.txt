@@ -1,0 +1,58 @@
+<?php
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+// Verifica se o método de requisição é POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(400); // Bad Request
+    echo "Método de requisição inválido.";
+    exit;
+}
+
+// Verifica se o campo 'nomeProfessor' está presente
+if (!isset($_POST['nomeProfessor'])) {
+    http_response_code(400); // Bad Request
+    echo "O campo 'nomeProfessor' não foi enviado.";
+    exit;
+}
+
+// Recupera os dados do formulário
+$nomeProfessor = $_POST['nomeProfessor'];
+
+// Conecta ao banco de dados (ajuste as credenciais conforme necessário)
+$conexao = new mysqli("localhost", "id21509049_calendariobunitu", "Senha123@", "id21509049_calendario");
+
+// Verifica a conexão
+if ($conexao->connect_error) {
+    http_response_code(500); // Internal Server Error
+    die("Falha na conexão com o banco de dados: " . $conexao->connect_error);
+}
+
+// Prepara a declaração SQL usando um statement parametrizado
+$sql = "INSERT INTO professores (nome) VALUES (?)";
+
+// Prepara a declaração
+$stmt = $conexao->prepare($sql);
+
+// Verifica se a preparação foi bem-sucedida
+if ($stmt === FALSE) {
+    http_response_code(500); // Internal Server Error
+    die("Erro na preparação da declaração SQL: " . $conexao->error);
+}
+
+// Associa os parâmetros à declaração
+$stmt->bind_param("s", $nomeProfessor);
+
+// Executa a declaração
+if ($stmt->execute() === TRUE) {
+    echo "Professor cadastrado com sucesso!";
+} else {
+    http_response_code(500); // Internal Server Error
+    echo "Erro ao cadastrar professor: " . $stmt->error;
+}
+
+// Fecha a declaração e a conexão
+$stmt->close();
+$conexao->close();
+?>
